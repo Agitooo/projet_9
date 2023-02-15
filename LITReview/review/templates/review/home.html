@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Home Page</h1>
+
+    <h2>Liste des Tickets</h2>
+    <div class="grid-container">
+        {% for ticket in tickets %}
+            <div class="post">
+                <a href="{% url 'view_ticket' ticket.id %}">
+                    <span>{{ ticket.auteur }} à demandé une critique le {{ ticket.date_creation }}</span>
+                    <h4>Ticket : {{ ticket.titre }}</h4>
+                    <p>{{ ticket.contenu }}</p>
+                    <img src="{{ ticket.photo.url }}">
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock content %}
