@@ -1,9 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h2>Modifier un ticket</h2>
+    <h2>Modifier une critique</h2>
     <form method="post" enctype="multipart/form-data">
         {{ review_form.as_p }}
         {% csrf_token %}
         <button type="submit">Envoyer</button>
     </form>
+    <h2>{{ ticket.titre }}</h2>
+    <p>Auteur : {{ ticket.auteur }}</p>
+    <p>{{ ticket.contenu }}</p>
+    <img src="{{ ticket.photo.url }}">
 {% endblock content %}

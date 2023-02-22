@@ -90,7 +90,6 @@ def create_review(request):
 
 @login_required
 def create_review_from_ticket(request, ticket_id):
-    # ticket_form = TicketForm()
     ticket = get_object_or_404(Ticket, id=ticket_id)
     review_form = ReviewForm()
     if request.method == 'POST':
@@ -101,7 +100,6 @@ def create_review_from_ticket(request, ticket_id):
             review.ticket = ticket
             review.save()
             return redirect('home')
-    # ticket_form = TicketForm(instance=ticket)
     context = {
         'ticket': ticket,
         'review_form': review_form,
@@ -131,4 +129,9 @@ def update_review(request, ticket_id, review_id):
             return redirect('home')
     else:
         review_form = ReviewForm(instance=review)
-    return render(request, 'review/update_review.html', context={'review_form': review_form})
+
+    context = {
+        'ticket': ticket,
+        'review_form': review_form,
+    }
+    return render(request, 'review/update_review.html', context)
