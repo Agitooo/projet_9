@@ -4,15 +4,28 @@
 
     <h2>Liste des Tickets</h2>
     <div class="grid-container">
-        {% for ticket in tickets %}
-            <div class="post">
-                <a href="{% url 'view_ticket' ticket.id %}">
-                    <span>{{ ticket.auteur }} à demandé une critique le {{ ticket.date_creation }}</span>
-                    <h4>Ticket : {{ ticket.titre }}</h4>
-                    <p>{{ ticket.contenu }}</p>
-                    <img src="{{ ticket.photo.url }}">
-                </a>
-            </div>
-        {% endfor %}
+        {% if postes %}
+            {% for poste in postes %}
+                {% if poste.content_type == 'Ticket' %}
+                    <div class="post">
+                        <a href="{% url 'view_ticket' poste.id %}">
+                            <span>{{ poste.auteur }} à demandé une critique le {{ poste.date_creation }}</span>
+                            <h4>Ticket : {{ poste.titre }}</h4>
+                            <p>{{ poste.contenu }}</p>
+                            <img src="{{ poste.photo.url }}">
+                        </a>
+                    </div>
+                {% elif poste.content_type == 'Review' %}
+                    <div class="post">
+                        <a href="{% url 'view_review' poste.ticket.id poste.id %}">
+                            <span>{{ poste.auteur }} à effectué une critique le {{ poste.date_creation }}</span>
+                            <h2>Vote : {{ poste.vote }}</h2>
+                            <h4>Critique : {{ poste.titre }}</h4>
+                            <p>{{ poste.contenu }}</p>
+                        </a>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
     </div>
 {% endblock content %}

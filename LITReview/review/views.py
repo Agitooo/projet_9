@@ -1,41 +1,134 @@
 from django.shortcuts import redirect, render, get_object_or_404
-from . import forms
-from . import models
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+from django.db.models import Value, CharField
+from .forms import TicketForm, ReviewForm
+from .models import Ticket, Review
+from itertools import chain
 
 
+@login_required
 def home(request):
-    tickets = models.Ticket.objects.all()
-    return render(request, 'review/home.html', context={'tickets': tickets})
+    tickets = Ticket.objects.all()
+    tickets = tickets.annotate(content_type=Value('Ticket', CharField()))
+    reviews = Review.objects.all()
+    reviews = reviews.annotate(content_type=Value('Review', CharField()))
+    liste_postes = sorted(chain(reviews, tickets), key=lambda poste: poste.date_creation, reverse=True)
+
+    postes = None
+    if liste_postes:
+        paginator = Paginator(liste_postes, 8)
+        page = request.GET.get('page')
+        postes = paginator.get_page(page)
+
+    context = {
+        'tickets': tickets,
+        'reviews': reviews,
+        'postes': postes,
+    }
+
+    return render(request, 'review/home.html', context)
 
 
+@login_required
 def create_ticket(request):
-    ticket_form = forms.TicketForm()
+    ticket_form = TicketForm()
     if request.method == 'POST':
-        ticket_form = forms.TicketForm(request.POST, request.FILES)
+        ticket_form = TicketForm(request.POST, request.FILES)
         if ticket_form.is_valid():
             ticket = ticket_form.save(commit=False)
             ticket.auteur = request.user
             ticket.save()
             return redirect('home')
-    context = {
-        'ticket_form': ticket_form,
-    }
-    return render(request, 'review/create_ticket.html', context=context)
+    return render(request, 'review/create_ticket.html', context={'ticket_form': ticket_form})
 
 
+@login_required
 def update_ticket(request, ticket_id):
-    ticket = get_object_or_404(models.Ticket, id=ticket_id)
+    ticket = get_object_or_404(Ticket, id=ticket_id)
     if request.method == 'POST':
-        ticket_form = forms.TicketForm(request.POST, request.FILES, instance=ticket)
+        ticket_form = TicketForm(request.POST, request.FILES, instance=ticket)
         if ticket_form.is_valid():
             ticket_form.save()
             return redirect('home')
     else:
-        ticket_form = forms.TicketForm(instance=ticket)
+        ticket_form = TicketForm(instance=ticket)
     return render(request, 'review/update_ticket.html', context={'ticket_form': ticket_form})
 
 
+@login_required
 def view_ticket(request, ticket_id):
-    ticket = get_object_or_404(models.Ticket, id=ticket_id)
-    print(ticket)
+    ticket = get_object_or_404(Ticket, id=ticket_id)
     return render(request, 'review/view_ticket.html', {'ticket': ticket})
+
+
+@login_required
+def create_review(request):
+    ticket_form = TicketForm()
+    review_form = ReviewForm()
+    if request.method == 'POST':
+        ticket_form = TicketForm(request.POST, request.FILES)
+        review_form = ReviewForm(request.POST)
+        if review_form.is_valid() and ticket_form.is_valid():
+            # On enregistre le ticket, car il en faut un pour faire une critique
+            ticket = ticket_form.save(commit=False)
+            ticket.auteur = request.user
+            ticket.save()
+            # Puis on save la critique en ajoutant el ticket
+            review = review_form.save(commit=False)
+            review.auteur = request.user
+            review.ticket = ticket
+            review.save()
+            return redirect('home')
+
+    context = {
+        'ticket_form': ticket_form,
+        'review_form': review_form,
+    }
+    return render(request, 'review/create_review.html', context)
+
+
+@login_required
+def create_review_from_ticket(request, ticket_id):
+    # ticket_form = TicketForm()
+    ticket = get_object_or_404(Ticket, id=ticket_id)
+    review_form = ReviewForm()
+    if request.method == 'POST':
+        review_form = ReviewForm(request.POST)
+        if review_form.is_valid():
+            review = review_form.save(commit=False)
+            review.auteur = request.user
+            review.ticket = ticket
+            review.save()
+            return redirect('home')
+    # ticket_form = TicketForm(instance=ticket)
+    context = {
+        'ticket': ticket,
+        'review_form': review_form,
+    }
+    return render(request, 'review/create_review_from_ticket.html', context)
+
+
+@login_required
+def view_review(request, ticket_id, review_id):
+    ticket = get_object_or_404(Ticket, id=ticket_id)
+    review = get_object_or_404(Review, id=review_id)
+    context = {
+        'ticket': ticket,
+        'review': review,
+    }
+    return render(request, 'review/view_review.html', context)
+
+
+@login_required
+def update_review(request, ticket_id, review_id):
+    ticket = get_object_or_404(Ticket, id=ticket_id)
+    review = get_object_or_404(Ticket, id=review_id)
+    if request.method == 'POST':
+        review_form = ReviewForm(request.POST, instance=review)
+        if review_form.is_valid():
+            review_form.save()
+            return redirect('home')
+    else:
+        review_form = ReviewForm(instance=review)
+    return render(request, 'review/update_review.html', context={'review_form': review_form})

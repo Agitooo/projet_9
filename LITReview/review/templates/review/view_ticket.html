@@ -7,4 +7,5 @@
     {% if current.user == ticket.user %}
         <a class="btn" href="{% url 'update_ticket' ticket.id %}">Mettre à jour le ticket</a>
     {% endif %}
+    <a class="btn" href="{% url 'create_review_from_ticket' ticket.id %}">Ajouter une critique</a>
 {% endblock content %}

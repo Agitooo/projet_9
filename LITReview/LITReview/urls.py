@@ -40,6 +40,10 @@ urlpatterns = [
     path('ticket/add/', review.views.create_ticket, name='create_ticket'),
     path('ticket/<int:ticket_id>/', review.views.view_ticket, name='view_ticket'),
     path('ticket/<int:ticket_id>/change/', review.views.update_ticket, name='update_ticket'),
+    path('ticket/review/add/', review.views.create_review, name='create_review'),
+    path('ticket/review/add/<int:ticket_id>', review.views.create_review_from_ticket, name='create_review_from_ticket'),
+    path('ticket/<int:ticket_id>/review/<int:review_id>/', review.views.view_review, name='view_review'),
+    path('ticket/<int:ticket_id>/review/<int:review_id>/change/', review.views.update_review, name='update_review'),
 ]
 
 if settings.DEBUG:

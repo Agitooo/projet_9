@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Critique</h1>
+    <h2>{{ review.titre }}</h2>
+    <p>Auteur : {{ review.auteur }}</p>
+    <p>vote : {{ review.vote }}</p>
+    <p>{{ review.contenu }}</p>
+    {% if current.user == review.user %}
+        <a class="btn" href="{% url 'update_review' ticket.id review.id %}">Mettre à jour la critique</a>
+    {% endif %}
+    <h1>Détail du Ticket de {{ ticket.auteur }}</h1>
+    <h2>{{ ticket.titre }}</h2>
+    <p>{{ ticket.contenu }}</p>
+    <img src="{{ ticket.photo.url }}">
+{% endblock content %}
