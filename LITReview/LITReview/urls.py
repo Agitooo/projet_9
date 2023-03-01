@@ -44,6 +44,8 @@ urlpatterns = [
     path('ticket/review/add/<int:ticket_id>', review.views.create_review_from_ticket, name='create_review_from_ticket'),
     path('ticket/<int:ticket_id>/review/<int:review_id>/', review.views.view_review, name='view_review'),
     path('ticket/<int:ticket_id>/review/<int:review_id>/change/', review.views.update_review, name='update_review'),
+    path('user/follow/', authentication.views.follow_user, name='follow_user'),
+    path('user/unfollow/<int:user_id>/', authentication.views.unfollow_user, name='unfollow_user'),
 ]
 
 if settings.DEBUG:

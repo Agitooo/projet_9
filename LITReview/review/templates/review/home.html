@@ -9,19 +9,19 @@
                 {% if poste.content_type == 'Ticket' %}
                     <div class="post">
                         <a href="{% url 'view_ticket' poste.id %}">
-                            <span>{{ poste.auteur }} à demandé une critique le {{ poste.date_creation }}</span>
-                            <h4>Ticket : {{ poste.titre }}</h4>
-                            <p>{{ poste.contenu }}</p>
-                            <img src="{{ poste.photo.url }}">
+                            <span>{{ poste.user.username }} à demandé une critique le {{ poste.time_created }}</span>
+                            <h4>Ticket : {{ poste.title }}</h4>
+                            <p>{{ poste.description }}</p>
+                            <img src="{{ poste.image.url }}">
                         </a>
                     </div>
                 {% elif poste.content_type == 'Review' %}
                     <div class="post">
                         <a href="{% url 'view_review' poste.ticket.id poste.id %}">
-                            <span>{{ poste.auteur }} à effectué une critique le {{ poste.date_creation }}</span>
-                            <h2>Vote : {{ poste.vote }}</h2>
-                            <h4>Critique : {{ poste.titre }}</h4>
-                            <p>{{ poste.contenu }}</p>
+                            <span>{{ poste.user.username }} à effectué une critique le {{ poste.time_created }}</span>
+                            <h2>Vote : {{ poste.rating }}</h2>
+                            <h4>Critique : {{ poste.headline }}</h4>
+                            <p>{{ poste.body }}</p>
                         </a>
                     </div>
                 {% endif %}

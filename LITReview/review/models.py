@@ -4,19 +4,19 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class Ticket(models.Model):
-    photo = models.ImageField(null=True)
-    titre = models.CharField(max_length=128)
-    contenu = models.CharField(max_length=5000)
-    auteur = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    date_creation = models.DateTimeField(auto_now_add=True, editable=True)
+    title = models.CharField(max_length=128)
+    description = models.TextField(max_length=2048, blank=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    image = models.ImageField(null=True, blank=True)
+    time_created = models.DateTimeField(auto_now_add=True, editable=True)
     objects = models.Manager()
 
 
 class Review(models.Model):
-    ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)
-    titre = models.CharField(max_length=128)
-    vote = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
-    contenu = models.CharField(max_length=5000)
-    auteur = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    date_creation = models.DateTimeField(auto_now_add=True, editable=True)
+    ticket = models.ForeignKey(to=Ticket, on_delete=models.CASCADE)
+    rating = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)])
+    user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    headline = models.CharField(max_length=128)
+    body = models.TextField(max_length=8192)
+    time_created = models.DateTimeField(auto_now_add=True, editable=True)
     objects = models.Manager()

@@ -13,7 +13,7 @@ def home(request):
     tickets = tickets.annotate(content_type=Value('Ticket', CharField()))
     reviews = Review.objects.all()
     reviews = reviews.annotate(content_type=Value('Review', CharField()))
-    liste_postes = sorted(chain(reviews, tickets), key=lambda poste: poste.date_creation, reverse=True)
+    liste_postes = sorted(chain(reviews, tickets), key=lambda poste: poste.time_created, reverse=True)
 
     postes = None
     if liste_postes:
@@ -37,7 +37,7 @@ def create_ticket(request):
         ticket_form = TicketForm(request.POST, request.FILES)
         if ticket_form.is_valid():
             ticket = ticket_form.save(commit=False)
-            ticket.auteur = request.user
+            ticket.user = request.user
             ticket.save()
             return redirect('home')
     return render(request, 'review/create_ticket.html', context={'ticket_form': ticket_form})
@@ -72,11 +72,11 @@ def create_review(request):
         if review_form.is_valid() and ticket_form.is_valid():
             # On enregistre le ticket, car il en faut un pour faire une critique
             ticket = ticket_form.save(commit=False)
-            ticket.auteur = request.user
+            ticket.user = request.user
             ticket.save()
             # Puis on save la critique en ajoutant el ticket
             review = review_form.save(commit=False)
-            review.auteur = request.user
+            review.user = request.user
             review.ticket = ticket
             review.save()
             return redirect('home')
@@ -96,7 +96,7 @@ def create_review_from_ticket(request, ticket_id):
         review_form = ReviewForm(request.POST)
         if review_form.is_valid():
             review = review_form.save(commit=False)
-            review.auteur = request.user
+            review.user = request.user
             review.ticket = ticket
             review.save()
             return redirect('home')

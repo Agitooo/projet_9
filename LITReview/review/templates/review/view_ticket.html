@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h2>{{ ticket.titre }}</h2>
-    <p>Auteur : {{ ticket.auteur }}</p>
-    <p>{{ ticket.contenu }}</p>
-    <img src="{{ ticket.photo.url }}">
+    <h2>{{ ticket.title }}</h2>
+    <p>Auteur : {{ ticket.user.username }}</p>
+    <p>{{ ticket.description }}</p>
+    <img src="{{ ticket.image.url }}">
     {% if current.user == ticket.user %}
         <a class="btn" href="{% url 'update_ticket' ticket.id %}">Mettre à jour le ticket</a>
     {% endif %}

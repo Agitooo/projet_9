@@ -7,7 +7,7 @@
         <button type="submit">Envoyer</button>
     </form>
     <h2>{{ ticket.titre }}</h2>
-    <p>Auteur : {{ ticket.auteur }}</p>
-    <p>{{ ticket.contenu }}</p>
-    <img src="{{ ticket.photo.url }}">
+    <p>Auteur : {{ ticket.user.username }}</p>
+    <p>{{ ticket.description }}</p>
+    <img src="{{ ticket.image.url }}">
 {% endblock content %}

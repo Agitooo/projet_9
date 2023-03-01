@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
     <form method="post" enctype="multipart/form-data">
-        <h2>{{ ticket.titre }}</h2>
-        <p>Auteur : {{ ticket.auteur }}</p>
-        <p>{{ ticket.contenu }}</p>
+        <h2>{{ ticket.title }}</h2>
+        <p>Auteur : {{ ticket.user }}</p>
+        <p>{{ ticket.description }}</p>
         <img src="{{ ticket.photo.url }}">
         <h2>Ajouter une critique</h2>
         {{ review_form.as_p }}
