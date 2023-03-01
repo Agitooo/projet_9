@@ -1,14 +1,30 @@
 {% extends 'base.html' %}
 {% block content %}
-<div>
-    <form method="post">
-        <input name="user_to_follow" type="text" placeholder="Suivre un utilisateur">
-        {% csrf_token %}
-        <button type="submit" >Suivre</button>
-    </form>
-
-    {% for user in followed_user_list %}
-        <p>{{ user.followed_user.username }}<a class="btn" href="{% url 'unfollow_user' user.followed_user.id %}">Ne plus suivre</a></p>
-    {% endfor %}
-</div>
+    <div class="d-flex justify-content-center">
+        <h2>Ajouter un abonnement</h2>
+    </div>
+    <div class="d-flex justify-content-center mb-5">
+        <form method="post">
+            <div class="d-flex flex-column justify-content-center">
+                <input name="user_to_follow" type="text" placeholder="Suivre un utilisateur">
+                {% csrf_token %}
+                <button type="submit" >Suivre</button>
+            </div>
+        </form>
+    </div>
+    <div class="d-flex justify-content-center">
+        <h2>Liste des abonnement</h2>
+    </div>
+    <div class="d-flex flex-column justify-content-center">
+        {% for user in followed_user_list %}
+            <div class="d-flex flex-raw justify-content-center">
+                <div>
+                    <p>{{ user.followed_user.username }}</p>
+                </div>
+                <div>
+                    <a class="btn" href="{% url 'unfollow_user' user.followed_user.id %}">Ne plus suivre</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock content %}

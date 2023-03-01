@@ -1,31 +1,43 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h1>Home Page</h1>
-
-    <h2>Liste des Tickets</h2>
-    <div class="grid-container">
+<div class="d-flex flex-column justify-content-center">
+    <div class="d-flex flex-raw justify-content-center">
+        <h2>Liste des Tickets</h2>
+    </div>
+    <div class="d-flex flex-column justify-content-center">
         {% if postes %}
             {% for poste in postes %}
                 {% if poste.content_type == 'Ticket' %}
-                    <div class="post">
-                        <a href="{% url 'view_ticket' poste.id %}">
-                            <span>{{ poste.user.username }} à demandé une critique le {{ poste.time_created }}</span>
-                            <h4>Ticket : {{ poste.title }}</h4>
-                            <p>{{ poste.description }}</p>
-                            <img src="{{ poste.image.url }}">
+                    <div class="d-flex flex-column justify-content-center mb-5">
+                        <a class="ticket-a" href="{% url 'view_ticket' poste.id %}" alt="Voir le ticket">
+                            <div class="ticket container d-flex flex-column justify-content-center">
+                                <span>{{ poste.user.username }} à demandé une critique le {{ poste.time_created }}</span>
+                                <h4>Ticket : {{ poste.title }}</h4>
+                                <p>{{ poste.description }}</p>
+                                <img class="img-poste" src="{{ poste.image.url }}">
+                            </div>
                         </a>
                     </div>
                 {% elif poste.content_type == 'Review' %}
-                    <div class="post">
-                        <a href="{% url 'view_review' poste.ticket.id poste.id %}">
-                            <span>{{ poste.user.username }} à effectué une critique le {{ poste.time_created }}</span>
-                            <h2>Vote : {{ poste.rating }}</h2>
-                            <h4>Critique : {{ poste.headline }}</h4>
-                            <p>{{ poste.body }}</p>
+                    <div class="d-flex flex-column justify-content-center mb-5">
+                        <a class="review-a" href="{% url 'view_review' poste.ticket.id poste.id %}" alt="Voir le ticket">
+                            <div class="review container d-flex flex-column justify-content-center">
+                                <span>{{ poste.user.username }} à effectué une critique le {{ poste.time_created }}</span>
+                                <h2>Vote : {{ poste.rating }}</h2>
+                                <h4>Critique : {{ poste.headline }}</h4>
+                                <p>{{ poste.body }}</p>
+                                <div class="apercu-ticket container ml-5 ticket">
+                                    <span>{{ poste.ticket.user.username }} à demandé une critique le {{ poste.ticket.time_created }}</span>
+                                    <h4>Ticket : {{ poste.ticket.title }}</h4>
+                                    <p>{{ poste.ticket.description }}</p>
+                                    <img class="img-poste" src="{{ poste.ticket.image.url }}">
+                                </div>
+                            </div>
                         </a>
                     </div>
                 {% endif %}
             {% endfor %}
         {% endif %}
     </div>
+</div>
 {% endblock content %}

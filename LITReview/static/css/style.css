@@ -1,0 +1,37 @@
+.content-div {
+    max-width: 700px;
+}
+
+.ticket {
+    max-width: 700px;
+    color: black;
+    text-decoration: none;
+    background-color: brown;
+}
+
+.ticket-a {
+    color: black;
+    text-decoration: none;
+}
+
+.review {
+    max-width: 700px;
+    color: black;
+    text-decoration: none;
+    background-color: blueviolet;
+}
+
+.review-a {
+    color: black;
+    text-decoration: none;
+}
+
+.img-poste {
+    max-width: 250px;
+    max-height: 250px;
+}
+
+.apercu-ticket {
+    border: 1px solid black;
+    max-width: 400px;
+}

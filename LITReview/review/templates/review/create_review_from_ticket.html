@@ -1,13 +1,24 @@
 {% extends 'base.html' %}
 {% block content %}
-    <form method="post" enctype="multipart/form-data">
-        <h2>{{ ticket.title }}</h2>
-        <p>Auteur : {{ ticket.user }}</p>
-        <p>{{ ticket.description }}</p>
-        <img src="{{ ticket.photo.url }}">
-        <h2>Ajouter une critique</h2>
-        {{ review_form.as_p }}
-        {% csrf_token %}
-        <button type="submit">Envoyer</button>
-    </form>
+<div class="d-flex justify-content-center">
+    <div class="d-flex flex-column justify-content-center">
+        <form method="post" enctype="multipart/form-data">
+            <div class="d-flex justify-content-center">
+                <h2>{{ ticket.title }}</h2>
+            </div>
+            <p>Auteur : {{ ticket.user }}</p>
+            <p>{{ ticket.description }}</p>
+            <img class="img-poste" src="{{ ticket.image.url }}">
+            
+            <div class="d-flex justify-content-center mt-5">
+                <h2>Ajouter une critique</h2>
+            </div>
+            <div class="d-flex flex-column justify-content-center">
+                {{ review_form }}
+                {% csrf_token %}
+                <button type="submit">Envoyer</button>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock content %}
