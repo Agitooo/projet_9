@@ -14,8 +14,8 @@
                 <h1>LITReview</h1>
             </div>
             <div id="menu" class="d-flex flex-row justify-content-center">
+                <a class="btn" href="{% url 'home' %}">Accueil</a>
                 {% if user.username != '' %}
-                    <a class="btn" href="{% url 'home' %}">Accueil</a>
                     <a class="btn" href="{% url 'create_ticket' %}">Créer un ticket</a>
                     <a class="btn" href="{% url 'create_review' %}">Ajouter une critique</a>
                     <a class="btn" href="{% url 'follow_user' %}">Abonnements</a>

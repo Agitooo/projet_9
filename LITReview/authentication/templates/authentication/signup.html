@@ -1,12 +1,15 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h2>Inscription</h2>
-<!--    {% if form.errors %}-->
-<!--        {{ form.errors }}-->
-<!--    {% endif %}-->
-    <form method="post">
-        {{ form.as_p }}
-        {% csrf_token %}
-        <button type="submit">S’inscrire</button>
-    </form>
+    <div class="d-flex justify-content-center">
+        <h2>Inscription</h2>
+    </div>
+    <div class="d-flex justify-content-center">
+        <form method="post">
+            <div class="d-flex flex-column justify-content-center">
+                {{ form }}
+                {% csrf_token %}
+                <button type="submit">S’inscrire</button>
+            </div>
+        </form>
+    </div>
 {% endblock content %}
