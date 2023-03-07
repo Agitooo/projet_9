@@ -13,7 +13,16 @@
         <p>vote : {{ review.rating }}</p>
         <p>{{ review.body }}</p>
         {% if user == review.user %}
-            <a class="btn" href="{% url 'update_review' ticket.id review.id %}">Mettre à jour la critique</a>
+            <a class="btn" href="{% url 'update_review' ticket.id review.id %}">
+                <button class="btn btn-outline-secondary" type="button">
+                    Mettre à jour la critique
+                </button>
+            </a>
+            <a class="btn" href="{% url 'delete_review' ticket.id review.id %}">
+                <button class="btn btn-outline-danger" type="button">
+                    Supprimer la critique
+                </button>
+            </a>
         {% endif %}
         <div class="d-flex justify-content-center">
             <h1>Détail du Ticket de {{ ticket.user.username }}</h1>

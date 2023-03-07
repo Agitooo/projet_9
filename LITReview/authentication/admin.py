@@ -2,6 +2,12 @@ from django.contrib import admin
 from django.contrib.admin import register
 
 from review.models import Ticket, Review
+from authentication.models import UserFollows
+
+
+@register(UserFollows)
+class UserFollowsAdmin(admin.ModelAdmin):
+    pass
 
 
 @register(Ticket)

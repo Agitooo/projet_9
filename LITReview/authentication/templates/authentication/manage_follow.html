@@ -5,26 +5,60 @@
     </div>
     <div class="d-flex justify-content-center mb-5">
         <form method="post">
-            <div class="d-flex flex-column justify-content-center">
-                <input name="user_to_follow" type="text" placeholder="Suivre un utilisateur">
+            <div class="d-flex flex-raw justify-content-center input-group input-group-sm">
+                <input class="form-control" name="user_to_follow" type="text" placeholder="Suivre un utilisateur">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="submit" >Suivre</button>
+                </div>
                 {% csrf_token %}
-                <button type="submit" >Suivre</button>
             </div>
         </form>
     </div>
     <div class="d-flex justify-content-center">
-        <h2>Liste des abonnement</h2>
+        <h2>Liste des abonnements</h2>
     </div>
-    <div class="d-flex flex-column justify-content-center">
-        {% for user in followed_user_list %}
+    <div class="d-flex flex-column justify-content-center mr-auto ml-auto">
+        {% if followed_user_list|length > 0 %}
+            {% for user in followed_user_list %}
+                <div class="d-flex flex-raw justify-content-center input-group input-group-sm ">
+                    <div class="form-control d-flex flex-raw justify-content-center">
+                        <span class="mt-1">{{ user.followed_user.username }}</span>
+                    </div>
+                    <div class="input-group-append">
+                        <a href="{% url 'unfollow_user' user.followed_user.id %}">
+                            <button class="btn btn-outline-danger" type="button">
+                                Ne plus suivre
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
             <div class="d-flex flex-raw justify-content-center">
                 <div>
-                    <p>{{ user.followed_user.username }}</p>
-                </div>
-                <div>
-                    <a class="btn" href="{% url 'unfollow_user' user.followed_user.id %}">Ne plus suivre</a>
+                    <p>Vous ne suivez personne actuellement.</p>
                 </div>
             </div>
-        {% endfor %}
+        {% endif %}
+    </div>
+    <div class="d-flex justify-content-center mt-5">
+        <h2>Liste des abonnés</h2>
+    </div>
+    <div class="d-flex flex-column justify-content-center">
+        {% if followed_by_user_list|length > 0 %}
+            {% for user in followed_by_user_list %}
+                <div class="d-flex flex-raw justify-content-center">
+                    <div>
+                        <p>{{ user.user.username }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="d-flex flex-raw justify-content-center">
+                <div>
+                    <p>Personne ne vous suit actuellement.</p>
+                </div>
+            </div>
+        {% endif %}
     </div>
 {% endblock content %}

@@ -6,7 +6,9 @@
     max-width: 700px;
     color: black;
     text-decoration: none;
-    background-color: brown;
+    border: 1px solid black;
+    border-collapse: collapse;
+    /* background-color: brown; */
 }
 
 .ticket-a {
@@ -18,7 +20,9 @@
     max-width: 700px;
     color: black;
     text-decoration: none;
-    background-color: blueviolet;
+    border: 1px solid black;
+    border-collapse: collapse;
+    /* background-color: blueviolet; */
 }
 
 .review-a {
@@ -34,4 +38,8 @@
 .apercu-ticket {
     border: 1px solid black;
     max-width: 400px;
+}
+
+.mw-700px {
+    max-width: 700px;
 }

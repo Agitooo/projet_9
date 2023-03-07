@@ -13,7 +13,16 @@ class TicketForm(forms.ModelForm):
 
 class ReviewForm(forms.ModelForm):
 
-    rating = forms.ChoiceField(widget=forms.RadioSelect, choices=VOTE_LIST, label='Vote')
+    rating = forms.ChoiceField(
+        widget=forms.RadioSelect(
+            attrs={
+                'class': 'd-flex flex-raw justify-content-between'
+            }
+        ),
+        choices=VOTE_LIST,
+        label='Vote',
+
+    )
 
     class Meta:
         model = Review

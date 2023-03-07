@@ -47,30 +47,30 @@ def signup_page(request):
 
 
 @login_required
+# def follow_user(request, user_id):
 def follow_user(request):
+    # On récupère l'utilisateur saisi
+    # user_to_follow = User.objects.get(pk=user_id)
     if request.method == 'POST':
-        try:
-            # On récupère l'utilisateur saisi
-            user_to_follow = User.objects.get(username=request.POST['user_to_follow'])
-            # user_to_follow = get_object_or_404(User, username=request.POST['user_to_follow'])
-            if user_to_follow != request.user:
-                try:
-                    UserFollows.objects.create(user=request.user, followed_user=user_to_follow)
-                    messages.success(request, f"Vous suivez maintenant {request.POST['user_to_follow']}")
-                except IntegrityError:
-                    # On vérifie qu'il ne suit pas déjà le user saisi
-                    messages.error(request, f"Vous suivez déjà {request.POST['user_to_follow']}")
-            else:
-                # L'utilisateur ne peut pas se suivre lui meme
-                messages.error(request, f"Vous ne pouvez pas vous suivre")
-        except User.DoesNotExist:
-            # Pas de correspondance entre la saisie et un utilisateur connu
-            messages.error(request, f"L'utilisateur {request.POST['user_to_follow']} est introuvable")
+        user_to_follow = get_object_or_404(User, username=request.POST['user_to_follow'])
+        if user_to_follow != request.user:
+            try:
+                UserFollows.objects.create(user=request.user, followed_user=user_to_follow)
+                messages.success(request, f"Vous suivez maintenant {request.POST['user_to_follow']}")
+            except IntegrityError:
+                # On vérifie qu'il ne suit pas déjà le user saisi
+                messages.error(request, f"Vous suivez déjà {request.POST['user_to_follow']}")
+        else:
+            # L'utilisateur ne peut pas se suivre lui meme
+            messages.error(request, f"Vous ne pouvez pas vous suivre")
 
     # On récupère la liste des utilisateurs suivis du user connecté
-    followed_user_list = UserFollows.objects.filter(user=request.user)
+    followed_user_list = request.user.following.all()
+    followed_by_user_list = request.user.followed_by.all()
+
     context = {
-        'followed_user_list': followed_user_list
+        'followed_user_list': followed_user_list,
+        'followed_by_user_list': followed_by_user_list
     }
     return render(request, 'authentication/manage_follow.html', context)
 

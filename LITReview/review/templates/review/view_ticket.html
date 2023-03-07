@@ -9,9 +9,22 @@
             <p>{{ ticket.description }}</p>
             <img class="apercu-ticket" src="{{ ticket.image.url }}">
             {% if user == ticket.user %}
-                <a class="btn" href="{% url 'update_ticket' ticket.id %}">Mettre à jour le ticket</a>
+                <a class="btn" href="{% url 'update_ticket' ticket.id %}">
+                    <button class="btn btn-outline-secondary" type="button">
+                        Mettre à jour le ticket
+                    </button>
+                </a>
+                <a class="btn" href="{% url 'delete_ticket' ticket.id %}">
+                    <button class="btn btn-outline-danger" type="button">
+                        Supprimer le ticket
+                    </button>
+                </a>
             {% endif %}
-            <a class="btn" href="{% url 'create_review_from_ticket' ticket.id %}">Ajouter une critique</a>
+            <a class="btn" href="{% url 'create_review_from_ticket' ticket.id %}">
+                <button class="btn btn-outline-success" type="button">
+                    Ajouter une critique
+                </button>
+            </a>
         </div>
     </div>
 {% endblock content %}

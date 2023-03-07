@@ -1,5 +1,6 @@
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Value, CharField
 from .forms import TicketForm, ReviewForm
@@ -9,15 +10,26 @@ from itertools import chain
 
 @login_required
 def home(request):
-    tickets = Ticket.objects.all()
+    # tickets = Ticket.objects.all()
+    tickets = Ticket.objects.filter(user__pk__in=[u.followed_user.pk for u in request.user.following.all()])
     tickets = tickets.annotate(content_type=Value('Ticket', CharField()))
-    reviews = Review.objects.all()
+
+    my_tickets = Ticket.objects.filter(user=request.user)
+    my_tickets = my_tickets.annotate(content_type=Value('Ticket', CharField()))
+
+    # reviews = Review.objects.all()
+    reviews = Review.objects.filter(user__in=[u.pk for u in request.user.following.all()])
     reviews = reviews.annotate(content_type=Value('Review', CharField()))
-    liste_postes = sorted(chain(reviews, tickets), key=lambda poste: poste.time_created, reverse=True)
+
+    my_reviews = Review.objects.filter(user=request.user)
+    my_reviews = my_reviews.annotate(content_type=Value('Review', CharField()))
+
+    liste_postes = sorted(chain(reviews, tickets, my_reviews, my_tickets), key=lambda
+        poste: poste.time_created, reverse=True)
 
     postes = None
     if liste_postes:
-        paginator = Paginator(liste_postes, 8)
+        paginator = Paginator(liste_postes, 20)
         page = request.GET.get('page')
         postes = paginator.get_page(page)
 
@@ -60,6 +72,14 @@ def update_ticket(request, ticket_id):
 def view_ticket(request, ticket_id):
     ticket = get_object_or_404(Ticket, id=ticket_id)
     return render(request, 'review/view_ticket.html', {'ticket': ticket})
+
+
+@login_required
+def delete_ticket(request, ticket_id):
+    ticket = get_object_or_404(Ticket, id=ticket_id)
+    ticket.delete()
+    messages.success(request, f"Votre ticket a été supprimé")
+    return redirect('home')
 
 
 @login_required
@@ -121,7 +141,7 @@ def view_review(request, ticket_id, review_id):
 @login_required
 def update_review(request, ticket_id, review_id):
     ticket = get_object_or_404(Ticket, id=ticket_id)
-    review = get_object_or_404(Ticket, id=review_id)
+    review = get_object_or_404(Review, id=review_id)
     if request.method == 'POST':
         review_form = ReviewForm(request.POST, instance=review)
         if review_form.is_valid():
@@ -135,3 +155,14 @@ def update_review(request, ticket_id, review_id):
         'review_form': review_form,
     }
     return render(request, 'review/update_review.html', context)
+
+
+@login_required
+def delete_review(request, ticket_id, review_id):
+    review = get_object_or_404(Review, id=review_id)
+    if review.user == request.user:
+        review.delete()
+        messages.success(request, f"Votre Critique a été supprimé")
+    else:
+        messages.error(request, f"Vous ne pouvez pas Supprimer cette critique")
+    return redirect('home')
