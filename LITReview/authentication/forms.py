@@ -1,8 +1,5 @@
-from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import authenticate, get_user_model, password_validation
+from django.contrib.auth import password_validation
 from django.core.exceptions import ValidationError
-from django.utils.translation import gettext
 from django.utils.translation import gettext_lazy as _
 
 from django import forms
@@ -74,7 +71,6 @@ class ReviewUserCreationForm(forms.ModelForm):
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=63, label='Nom d’utilisateur')
     password = forms.CharField(max_length=63, widget=forms.PasswordInput, label='Mot de passe')
-
 
 # class SignupForm(forms.ModelForm):
 #     username = forms.CharField(max_length=63, label='Nom d’utilisateur')

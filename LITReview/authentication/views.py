@@ -62,7 +62,7 @@ def follow_user(request):
                 messages.error(request, f"Vous suivez déjà {request.POST['user_to_follow']}")
         else:
             # L'utilisateur ne peut pas se suivre lui meme
-            messages.error(request, f"Vous ne pouvez pas vous suivre")
+            messages.error(request, "Vous ne pouvez pas vous suivre")
 
     # On récupère la liste des utilisateurs suivis du user connecté
     followed_user_list = request.user.following.all()
@@ -86,7 +86,7 @@ def unfollow_user(request, user_id):
             messages.success(request, f"Vous ne suivez plus {user_to_unfollow.username}")
         except IntegrityError:
             # On vérifie qu'il ne suit pas déjà le user saisi
-            messages.error(request, f"Utilisateur introuvable dans la liste des utilisateurs suivi")
+            messages.error(request, "Utilisateur introuvable dans la liste des utilisateurs suivi")
     except User.DoesNotExist:
         # Pas de correspondance entre la saisie et un utilisateur connu
         messages.error(request, f"L'utilisateur {user_id} est introuvable")

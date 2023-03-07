@@ -1,0 +1,6 @@
+[flake8]
+exclude=env/
+max-line-length=120
+format=html
+htmldir=flake8_rapport
+select = C,E,F,W,DJ,DJ10

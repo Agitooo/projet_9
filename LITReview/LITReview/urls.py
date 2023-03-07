@@ -16,8 +16,7 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.contrib.auth.views import (
-    LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView)
+from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path
 
 import authentication.views
@@ -47,7 +46,6 @@ urlpatterns = [
     path('ticket/<int:ticket_id>/review/<int:review_id>/change/', review.views.update_review, name='update_review'),
     path('ticket/<int:ticket_id>/review/<int:review_id>/delete/', review.views.delete_review, name='delete_review'),
     path('user/follow/', authentication.views.follow_user, name='follow_user'),
-    # path('user/follow/<int:user_id>/', authentication.views.follow_user, name='follow_user'),
     path('user/unfollow/<int:user_id>/', authentication.views.unfollow_user, name='unfollow_user'),
 ]
 

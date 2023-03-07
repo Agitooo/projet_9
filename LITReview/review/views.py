@@ -24,8 +24,12 @@ def home(request):
     my_reviews = Review.objects.filter(user=request.user)
     my_reviews = my_reviews.annotate(content_type=Value('Review', CharField()))
 
-    liste_postes = sorted(chain(reviews, tickets, my_reviews, my_tickets), key=lambda
-        poste: poste.time_created, reverse=True)
+    liste_postes = sorted(
+        chain(reviews, tickets, my_reviews, my_tickets),
+        key=lambda
+        poste: poste.time_created,
+        reverse=True
+    )
 
     postes = None
     if liste_postes:
@@ -77,8 +81,12 @@ def view_ticket(request, ticket_id):
 @login_required
 def delete_ticket(request, ticket_id):
     ticket = get_object_or_404(Ticket, id=ticket_id)
-    ticket.delete()
-    messages.success(request, f"Votre ticket a été supprimé")
+    if ticket.user == request.user:
+        ticket.delete()
+        messages.success(request, "Votre ticket a été supprimé")
+    else:
+        messages.error(request, "Vous ne pouvez pas supprimer ce ticket")
+        return render(request, 'review/view_ticket.html', {'ticket': ticket})
     return redirect('home')
 
 
@@ -162,7 +170,7 @@ def delete_review(request, ticket_id, review_id):
     review = get_object_or_404(Review, id=review_id)
     if review.user == request.user:
         review.delete()
-        messages.success(request, f"Votre Critique a été supprimé")
+        messages.success(request, "Votre Critique a été supprimé")
     else:
-        messages.error(request, f"Vous ne pouvez pas Supprimer cette critique")
+        messages.error(request, "Vous ne pouvez pas supprimer cette critique")
     return redirect('home')
