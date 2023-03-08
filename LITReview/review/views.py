@@ -18,7 +18,7 @@ def home(request):
     my_tickets = my_tickets.annotate(content_type=Value('Ticket', CharField()))
 
     # reviews = Review.objects.all()
-    reviews = Review.objects.filter(user__in=[u.pk for u in request.user.following.all()])
+    reviews = Review.objects.filter(user__in=[u.followed_user.pk for u in request.user.following.all()])
     reviews = reviews.annotate(content_type=Value('Review', CharField()))
 
     my_reviews = Review.objects.filter(user=request.user)
@@ -170,7 +170,7 @@ def delete_review(request, ticket_id, review_id):
     review = get_object_or_404(Review, id=review_id)
     if review.user == request.user:
         review.delete()
-        messages.success(request, "Votre Critique a été supprimé")
+        messages.success(request, "Votre critique a été supprimé")
     else:
         messages.error(request, "Vous ne pouvez pas supprimer cette critique")
     return redirect('home')

@@ -52,18 +52,20 @@ def follow_user(request):
     # On récupère l'utilisateur saisi
     # user_to_follow = User.objects.get(pk=user_id)
     if request.method == 'POST':
-        user_to_follow = get_object_or_404(User, username=request.POST['user_to_follow'])
-        if user_to_follow != request.user:
-            try:
-                UserFollows.objects.create(user=request.user, followed_user=user_to_follow)
-                messages.success(request, f"Vous suivez maintenant {request.POST['user_to_follow']}")
-            except IntegrityError:
-                # On vérifie qu'il ne suit pas déjà le user saisi
-                messages.error(request, f"Vous suivez déjà {request.POST['user_to_follow']}")
+        if request.POST['user_to_follow']:
+            user_to_follow = get_object_or_404(User, username=request.POST['user_to_follow'])
+            if user_to_follow != request.user:
+                try:
+                    UserFollows.objects.create(user=request.user, followed_user=user_to_follow)
+                    messages.success(request, f"Vous suivez maintenant {request.POST['user_to_follow']}")
+                except IntegrityError:
+                    # On vérifie qu'il ne suit pas déjà le user saisi
+                    messages.error(request, f"Vous suivez déjà {request.POST['user_to_follow']}")
+            else:
+                # L'utilisateur ne peut pas se suivre lui meme
+                messages.error(request, "Vous ne pouvez pas vous suivre")
         else:
-            # L'utilisateur ne peut pas se suivre lui meme
-            messages.error(request, "Vous ne pouvez pas vous suivre")
-
+            messages.error(request, "Vous devez renseigner un utilisateur")
     # On récupère la liste des utilisateurs suivis du user connecté
     followed_user_list = request.user.following.all()
     followed_by_user_list = request.user.followed_by.all()
@@ -79,7 +81,6 @@ def follow_user(request):
 def unfollow_user(request, user_id):
     try:
         user_to_unfollow = get_object_or_404(User, id=user_id)
-        # if user_to_unfollow != request.user:
         try:
             user_follow = get_object_or_404(UserFollows, user=request.user, followed_user=user_to_unfollow)
             user_follow.delete()
