@@ -68,6 +68,7 @@ Comptes utilisateurs:
 | toto2         | Passw0rd!      |
 | toto3         | Passw0rd!      |
 | toto4         | Passw0rd!      |
+| toto5         | Passw0rd!      |
 
 ### Sans le fichier db.sqlite fournis
 
