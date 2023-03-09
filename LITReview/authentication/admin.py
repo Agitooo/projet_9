@@ -1,5 +1,5 @@
-from django.contrib import admin
-from django.contrib.admin import register
+from django.contrib import admin, messages
+from django.contrib.admin import register, display, action
 
 from review.models import Ticket, Review
 from authentication.models import UserFollows
@@ -12,12 +12,23 @@ class UserFollowsAdmin(admin.ModelAdmin):
 
 @register(Ticket)
 class TicketAdmin(admin.ModelAdmin):
-    pass
-#     list_display = ['user', 'titre', 'contenu', 'date_creation']
-#     list_filter = ['user', 'titre', 'date_creation']
-#     search_fields = ['user', 'titre', 'contenu', 'date_creation']
-#     # fields = ['auteur', 'titre', 'contenu', 'date_creation']
-#     readonly_fields = ['date_creation']
+    list_display = ['user', 'title', 'description', 'time_created', 'ticket_str']
+    list_filter = ['user', 'title', 'time_created']
+    search_fields = ['user', 'title', 'description', 'time_created']
+    fields = ['user', 'title', 'description', 'time_created']
+    readonly_fields = ['time_created']
+    actions = ['test_action']
+
+    @display(description="Ticket")
+    def ticket_str(self, obj):
+        return str(obj)
+
+    @action(description="Tester une action")
+    def test_action(self, request, queryset):
+        if not queryset:
+            self.message_user(request, "Veuillez sélectionner un élément", level=messages.ERROR)
+        else:
+            self.message_user(request, f"Vous avez sélectionné {queryset.count()}", level=messages.SUCCESS)
 
 
 @register(Review)

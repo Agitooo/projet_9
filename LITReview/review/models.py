@@ -11,6 +11,13 @@ class Ticket(models.Model):
     time_created = models.DateTimeField(auto_now_add=True, editable=True)
     objects = models.Manager()
 
+    class Meta:
+        verbose_name = "ticket"
+        verbose_name_plural = "tickets"
+
+    def __str__(self):
+        return f"{self.title} - {self.user.username} - {self.time_created}"
+
 
 class Review(models.Model):
     ticket = models.ForeignKey(to=Ticket, on_delete=models.CASCADE)
@@ -20,3 +27,10 @@ class Review(models.Model):
     body = models.TextField(max_length=8192)
     time_created = models.DateTimeField(auto_now_add=True, editable=True)
     objects = models.Manager()
+
+    class Meta:
+        verbose_name = "critique"
+        verbose_name_plural = "critiques"
+
+    def __str__(self):
+        return f"{self.headline} - {self.user.username} - {self.time_created}"
